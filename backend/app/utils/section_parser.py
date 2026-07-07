@@ -27,7 +27,7 @@ def parse_resume_sections(text: str):
 
             for keyword in keywords:
 
-                if keyword in clean_line:
+                if clean_line.startswith(keyword) and len(clean_line.split()) <= 4:
                     found_section = section
                     break
 
