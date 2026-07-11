@@ -1,45 +1,53 @@
-def calculate_ats_score(sections):
+from app.ats.structure_score import analyze_structure
+from app.ats.skill_score import analyze_skills
+from app.ats.project_score import analyze_projects
+from app.ats.readability_score import analyze_readability
 
-    score = 0
 
-    strengths = []
-    weaknesses = []
 
-    # Required sections
-    required_sections = [
-        "skills",
-        "projects",
-        "education"
-    ]
+def calculate_ats_score(
+        sections,
+        full_text
+):
 
-    # Check required sections
-    for section in required_sections:
 
-        if sections.get(section):
+    structure = analyze_structure(sections)
 
-            score += 20
-            strengths.append(f"{section.title()} section found")
+    skills = analyze_skills(sections)
 
-        else:
-            weaknesses.append(f"Missing {section} section")
+    projects = analyze_projects(sections)
 
-    # Experience bonus
-    if sections.get("experience"):
+    readability = analyze_readability(full_text)
 
-        score += 15
-        strengths.append("Experience section present")
 
-    # Certifications bonus
-    if sections.get("certifications"):
 
-        score += 10
-        strengths.append("Certifications included")
+    final_score = (
 
-    # Prevent score > 100
-    score = min(score, 100)
+        structure["score"] * 0.30 +
+
+        skills["score"] * 0.25 +
+
+        projects["score"] * 0.30 +
+
+        readability["score"] * 0.15
+    )
+
 
     return {
-        "ats_score": score,
-        "strengths": strengths,
-        "weaknesses": weaknesses
+
+
+        "overall_score": round(final_score),
+
+
+        "breakdown": {
+
+
+            "structure": structure,
+
+            "skills": skills,
+
+            "projects": projects,
+
+            "readability": readability
+        }
     }

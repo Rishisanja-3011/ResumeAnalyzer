@@ -31,7 +31,10 @@ async def analyze_resume(file: UploadFile = File(...)):
 
     # Parse sections
     parsed_sections = parse_resume_sections(cleaned_text)
-    ats_results = calculate_ats_score(parsed_sections)
+    ats_results = calculate_ats_score(
+    parsed_sections,
+    cleaned_text
+)
 
     return {
         "filename": file.filename,
